@@ -1,0 +1,129 @@
+JDBC:
+it stands for Java Database Connectivity,
+Java Database Connectivity (JDBC) is an application programming interface (API) which allows the programmer to connect and interact with databases.
+It provides methods to query and update data in the database through update statements like SQL's CREATE, UPDATE, DELETE and INSERT and query statements such as SELECT.
+Additionally, JDBC can run stored procedures.
+
+To establish a connection between the Java application and the database, JDBC follows certain steps:
+
+    Loading the driver: The driver provides a connection to the database.
+    Creating the connection: Once the driver is loaded, the next step is to create a connection. The connection object uses a URL in the specified format, which includes the machine name, port number and database name. It communicates with the database object.
+    Executing SQL statements: Requires an object for building the SQL statement.
+    Returning the resultset: Retrieves and manipulates the database queries. Records can be accessed from the first row to the last row of the database. 
+ There are four types of JDBC drivers:
+
+    JDBC-ODBC Bridge Driver,
+    Native Driver,
+    Network Protocol Driver, and
+    Thin Driver
+A list of popular interfaces of JDBC API are given below:
+
+    Driver interface
+    Connection interface
+    Statement interface
+    PreparedStatement interface
+    CallableStatement interface
+    ResultSet interface
+    ResultSetMetaData interface
+    DatabaseMetaData interface
+    RowSet interface
+A list of popular classes of JDBC API are given below:
+
+    DriverManager class
+    Blob class
+    Clob class
+    Types class
+Why Should We Use JDBC
+
+Before JDBC, ODBC API was the database API to connect and execute the query with the database. But, ODBC API uses ODBC driver which is written in C language (i.e. platform dependent and unsecured). That is why Java has defined its own API (JDBC API) that uses JDBC drivers (written in Java language).
+
+We can use JDBC API to handle database using Java program and can perform the following activities:
+
+    Connect to the database
+    Execute queries and update statements to the database
+    Retrieve the result received from the database.
+************************************************
+simillar to that one we use jsch to make comunication between SSH server and java programe, 
+for that we need to add jars of jsch, jars we can install from the oficial website or using maven dependency
+<dependency>
+    <groupId>com.jcraft</groupId>
+    <artifactId>jsch</artifactId>
+    <version>0.1.53</version>
+</dependency>
+
+to create the connection of our java progranme with ssh server
+
+import java.io.InputStream;
+
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.Session;
+
+
+public class JSchExampleSSHConnection {
+
+	/**
+	 * JSch Example Tutorial
+	 * Java SSH Connection Program
+	 */
+	public static void main(String[] args) {
+	    String host="ssh.journaldev.com";
+	    String user="sshuser";
+	    String password="sshpwd";
+	    String command1="ls -ltr";
+	    try{
+	    	
+	    	java.util.Properties config = new java.util.Properties(); 
+	    	config.put("StrictHostKeyChecking", "no");
+	    	JSch jsch = new JSch();
+	    	Session session=jsch.getSession(user, host, 22);
+	    	session.setPassword(password);
+	    	session.setConfig(config);
+	    	session.connect();
+	    	System.out.println("Connected");
+	    	
+	    	Channel channel=session.openChannel("exec");
+	        ((ChannelExec)channel).setCommand(command1);
+	        channel.setInputStream(null);
+	        ((ChannelExec)channel).setErrStream(System.err);
+	        
+	        InputStream in=channel.getInputStream();
+	        channel.connect();
+	        byte[] tmp=new byte[1024];
+	        while(true){
+	          while(in.available()>0){
+	            int i=in.read(tmp, 0, 1024);
+	            if(i<0)break;
+	            System.out.print(new String(tmp, 0, i));
+	          }
+	          if(channel.isClosed()){
+	            System.out.println("exit-status: "+channel.getExitStatus());
+	            break;
+	          }
+	          try{Thread.sleep(1000);}catch(Exception ee){}
+	        }
+	        channel.disconnect();
+	        session.disconnect();
+	        System.out.println("DONE");
+	    }catch(Exception e){
+	    	e.printStackTrace();
+	    }
+
+	}
+
+}
+*************************************************************************************************
+Part2,
+
+ JDBC(Java Database Connectivity) is an API which is used to access database in a java program. 
+In simpler words it is a tool for java-database connection.
+ There are various methods and queries provided by JDBC for accessing database.
+
+Hibernate:-
+
+Hibernate is an ORM tool which is used to map database tables to java classes.
+ It is making it quite easy to implement to implement OOP concept of java to database tables.
+ Hibernate makes the connection itself and in hibernate to operate over the tables we use hibernate’s query language.
+ So in JDBC we were using SQl(structured query language) but here it itself provides the language which is popularly known as Hql.
+ For making connections drivers are provided by JDBC.
